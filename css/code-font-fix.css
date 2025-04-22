@@ -1,0 +1,30 @@
+/* 全局代码字体样式 */
+pre, pre code, code, .hljs, .hljs * {
+  font-size: 14px !important;
+  font-family: "Courier New", monospace !important;
+  line-height: 1.6 !important;
+}
+
+/* 避免 highlight.js 自带类引起的缩放差异 */
+.hljs-keyword,
+.hljs-built_in,
+.hljs-type,
+.hljs-literal,
+.hljs-number,
+.hljs-string,
+.hljs-comment,
+.hljs-quote,
+.hljs-template-tag,
+.hljs-title,
+.hljs-section,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-meta,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link {
+  font-size: 14px !important;
+  font-family: "Courier New", monospace !important;
+  font-weight: normal !important;
+  line-height: 1.6 !important;
+}
