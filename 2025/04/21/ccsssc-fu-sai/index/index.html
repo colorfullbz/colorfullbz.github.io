@@ -5,8 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords" content="ccsssc复赛, lbz&#39;s blog">
-    <meta name="description" content="一场很幽默的比赛.但是其中的java题不错,还是值得复现一下的.版本为java11.backdoor.java
-1234567891011121314151617181920212223242526272829303132333435363">
+    <meta name="description" content="jdk11">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -380,7 +379,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-04-22
+                    2025-04-23
                 </div>
                 
 
@@ -412,7 +411,7 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>一场很幽默的比赛.但是其中的java题不错,还是值得复现一下的.<br>版本为java11.<br><img src="/images/Pasted%20image%2020250404151146.png"><br><code>backdoor.java</code></p>
+                <p>jdk11<br><img src="/images/Pasted%20image%2020250404151146.png"><br><code>backdoor.java</code></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">package com.example.ezjav.controller;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">import com.example.ezjav.utils.MyObjectInputStream;</span><br><span class="line">import java.io.ByteArrayInputStream;</span><br><span class="line">import java.util.Base64;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestBody;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line">@RestController</span><br><span class="line">public class backdoor &#123;</span><br><span class="line">    static String banner = &quot;Welcome to java&quot;;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&#123;&quot;/&quot;&#125;)</span><br><span class="line">    public String index() throws Exception &#123;</span><br><span class="line">        return banner;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&#123;&quot;/read&quot;&#125;)</span><br><span class="line">    public String read(@RequestBody String body) &#123;</span><br><span class="line">        if (body != null)</span><br><span class="line">            try &#123;</span><br><span class="line">                byte[] data = Base64.getDecoder().decode(body);</span><br><span class="line">                String temp = new String(data);</span><br><span class="line">                if (temp.contains(&quot;naming&quot;) || temp.contains(&quot;com.sun&quot;) || temp.contains(&quot;jdk.jfr&quot;))</span><br><span class="line">                    return &quot;banned&quot;;</span><br><span class="line">                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);</span><br><span class="line">                MyObjectInputStream objectInputStream = new MyObjectInputStream(byteArrayInputStream);</span><br><span class="line">                Object object = objectInputStream.readObject();</span><br><span class="line">                return object.getClass().toString();</span><br><span class="line">            &#125; catch (Exception e) &#123;</span><br><span class="line">                return e.toString();</span><br><span class="line">            &#125;</span><br><span class="line">        return &quot;ok&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>PalDataSource.java</code></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">package com.example.ezjav.utils;</span><br><span class="line"></span><br><span class="line">import com.alibaba.druid.pool.DruidDataSource;</span><br><span class="line">import java.sql.Connection;</span><br><span class="line">import java.sql.SQLException;</span><br><span class="line">import java.sql.SQLFeatureNotSupportedException;</span><br><span class="line">import java.util.logging.Logger;</span><br><span class="line"></span><br><span class="line">public class PalDataSource extends DruidDataSource &#123;</span><br><span class="line">    public Connection getConnection(String username, String password) throws SQLException &#123;</span><br><span class="line">        return super.getConnection(username, password);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Logger getParentLogger() throws SQLFeatureNotSupportedException &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -558,7 +557,7 @@
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            jdk17
                         
                     </div>
                     <div class="publish-info">
@@ -744,7 +743,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">5.2k</span>
+                        class="white-color">5.1k</span>
             
             
             
