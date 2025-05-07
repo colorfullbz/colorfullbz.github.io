@@ -379,14 +379,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-04-23
+                    2025-05-07
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.7k
+                    1.9k
                 </div>
                 
 
@@ -434,6 +434,9 @@
 <p>这里反射构造对象的时候需要手动指定<code>LdapAttribute</code>的父类为<code>BasicAttribute</code>.<br>然而在实际打的时候发现了一个问题,<code>UTF8OverlongEncoding</code>bypass后还是带naming,这是由于进行Overlong Bypass使用的工具类只对<code>TC_CLASSDESC</code>进行了处理导致的.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">StreamHeader</span><br><span class="line">  -&gt; magic number (0xAC ED)</span><br><span class="line">  -&gt; version (0x00 05)</span><br><span class="line"></span><br><span class="line">Content (多个对象内容)</span><br><span class="line">  -&gt; TC_OBJECT</span><br><span class="line">    -&gt; classDesc</span><br><span class="line">      -&gt; TC_CLASSDESC</span><br><span class="line">        -&gt; className (UTF写入)</span><br><span class="line">        -&gt; serialVersionUID</span><br><span class="line">        -&gt; flags</span><br><span class="line">        -&gt; fieldDesc (字段信息)</span><br><span class="line">        -&gt; classAnnotations</span><br><span class="line">        -&gt; superClassDesc</span><br><span class="line">    -&gt; values</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>可以参考<a target="_blank" rel="noopener" href="https://whoopsunix.com/docs/PPPYSO/advance/UTFMIX/">这篇文章</a>去手动处理,但是懒了,留到下次组会(?</p>
+<p>在n久之后的某一天,看到了xz上的一个<a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/17733">blog</a>,才知道之前为什么有人说远程打不通了.<br>来分析一下JDK11下的<code>VersionHelper.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="comment">// System property to control whether classes may be loaded from an</span></span><br><span class="line">        <span class="comment">// arbitrary URL code base</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">trust</span> <span class="operator">=</span> getPrivilegedProperty(</span><br><span class="line">                <span class="string">&quot;com.sun.jndi.ldap.object.trustURLCodebase&quot;</span>, <span class="string">&quot;false&quot;</span>);</span><br><span class="line">        trustURLCodebase = <span class="string">&quot;true&quot;</span>.equalsIgnoreCase(trust);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// System property to control whether classes are allowed to be loaded from</span></span><br><span class="line">        <span class="comment">// &#x27;javaSerializedData&#x27;, &#x27;javaRemoteLocation&#x27; or &#x27;javaReferenceAddress&#x27; attributes.</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">trustSerialDataSp</span> <span class="operator">=</span> getPrivilegedProperty(</span><br><span class="line">                <span class="string">&quot;com.sun.jndi.ldap.object.trustSerialData&quot;</span>, <span class="string">&quot;true&quot;</span>);</span><br><span class="line">        trustSerialData = <span class="string">&quot;true&quot;</span>.equalsIgnoreCase(trustSerialDataSp);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>在被加载的时候从<code>JVM Options</code>中读取了这两个参数,如果没设置的话,则默认是false和true.事实上,<code>trustURLCodebase</code>只有在JDK8的低版本才是true,而<code>trustSerialData</code>在JDK21以下都是true.<br>因此需要使用JRMP去进行绕过,本地设置一个JRMPServer去发送Jackson的payload,然后访问<code>rmi://127.0.0.1:1098/&lt;any&gt;</code>即可.</p>
 
                 
             </div>
@@ -586,9 +589,9 @@
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="为什么要换新博客">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="自信安国赛败于天津后，决心开始一条全新的学习道路。">
                         
-                        <span class="card-title">为什么要换新博客</span>
+                        <span class="card-title">自信安国赛败于天津后，决心开始一条全新的学习道路。</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -743,7 +746,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">5.1k</span>
+                        class="white-color">5.3k</span>
             
             
             
